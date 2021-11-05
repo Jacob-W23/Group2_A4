@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const Course = new Schema({
-    courseInstuctor: 
+    courseInstructor: 
     {
         type: String,
         required: true
