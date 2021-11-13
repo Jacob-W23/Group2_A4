@@ -8,7 +8,7 @@ const mongoose = require('mongoose');
 
 const PORT = 1200;
 
-const dbUrl = "mongodb+srv://admin:Passw0rd@cluster0.vpu9l.mongodb.net/G2A4?retryWrites=true&w=majority";
+const dbUrl = "mongodb+srv://admin:Password7@cluster0.yfajg.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
 //Connect to MongoDB
 mongoose.connect(dbUrl,{
@@ -117,6 +117,86 @@ app.post('/addStudent', async(req, res)=>{
     });
     }catch{
         return res.status(500).json('{message: could not add student}');
+    }
+});
+
+//updates the student's first name
+app.post('/editStudentById', async (req, res) =>{
+    try {
+        students = await Student.updateOne({_id: req.body.id}
+        , {
+            fname: req.body.fname
+        }, {upsert: true});
+        if (students)
+        {
+            res.status(200).json("First name of the selected student updated");
+        }
+        else {
+            res.status(200).json("No student's first name changed");
+        }
+    }
+    catch {
+        return res.status(500).json("Failed to update the first name of the specified student");
+    }
+});
+
+//updates student's first and last name
+app.post('/editStudentByFname', async (req, res) =>{
+    try {
+        students = await Student.updateMany({fname: req.body.fname}
+        , {
+            fname: req.body.Fname,
+            lname: req.body.lname
+        }, {upsert: true});
+        if (students)
+        {
+            res.status(200).json("Last name of the selected student updated");
+        }
+        else {
+            res.status(200).json("No student's Last name changed");
+        }
+    }
+    catch {
+        return res.status(500).json("Failed to update the first name of the specified student");
+    }
+});
+
+//updates the name of the course instructor
+app.post('/editCourseByCourseName', async (req, res) =>{
+    try {
+        courses = await Course.updateOne({courseName: req.body.courseName}
+        , {
+            courseInstructor: req.body.courseInstructor
+        }, {upsert: true});
+        if (courses)
+        {
+            res.status(200).json("Name of the selected instructor updated");
+        }
+        else {
+            res.status(200).json("No instructor's name changed");
+        }
+    }
+    catch {
+        return res.status(500).json("Failed to update the name of the specified instructor");
+    }
+});
+
+//deletes the record of the student
+app.post('/deleteStudentByFname', async (req, res) =>{
+    try {
+        let students = await Student.findOne({fname: req.body.fname});
+
+        if (students)
+        {
+            await Student.deleteOne({fname: req.body.fname});
+            return res.status(200).json("The record with this first name has been deleted");
+        }
+        else {
+            res.status(200).json("No object found");
+        }
+    }
+    catch {
+        return res.status(500).json("Failed to update the name of the specified instructor");
     }
 });
 
